@@ -12,3 +12,4 @@ C:\Users\Mikey\source\repos\SystemsProgrammingAssessment\SystemsProgrammingAssig
 C:\Users\Mikey\source\repos\SystemsProgrammingAssessment\SystemsProgrammingAssignment\SystemsProgrammingAssignment\obj\Debug\net8.0\SystemsProgrammingAssignment.pdb
 C:\Users\Mikey\source\repos\SystemsProgrammingAssessment\SystemsProgrammingAssignment\SystemsProgrammingAssignment\obj\Debug\net8.0\SystemsProgrammingAssignment.genruntimeconfig.cache
 C:\Users\Mikey\source\repos\SystemsProgrammingAssessment\SystemsProgrammingAssignment\SystemsProgrammingAssignment\obj\Debug\net8.0\ref\SystemsProgrammingAssignment.dll
+C:\Users\Mikey\source\repos\SystemsProgrammingAssessment\SystemsProgrammingAssignment\SystemsProgrammingAssignment\obj\Debug\net8.0\SystemsProgrammingAssignment.sourcelink.json

@@ -7,8 +7,28 @@
       "RelativeMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|solutionrelative:systemsprogrammingassignment\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|c:\\users\\mikey\\source\\repos\\systemsprogrammingassessment\\systemsprogrammingassignment\\systemsprogrammingassignment\\dummydata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|solutionrelative:systemsprogrammingassignment\\dummydata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|c:\\users\\mikey\\source\\repos\\systemsprogrammingassessment\\systemsprogrammingassignment\\systemsprogrammingassignment\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|solutionrelative:systemsprogrammingassignment\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|c:\\users\\mikey\\source\\repos\\systemsprogrammingassessment\\systemsprogrammingassignment\\systemsprogrammingassignment\\motorcycle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|solutionrelative:systemsprogrammingassignment\\motorcycle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|c:\\users\\mikey\\source\\repos\\systemsprogrammingassessment\\systemsprogrammingassignment\\systemsprogrammingassignment\\hgv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|solutionrelative:systemsprogrammingassignment\\hgv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|c:\\users\\mikey\\source\\repos\\systemsprogrammingassessment\\systemsprogrammingassignment\\systemsprogrammingassignment\\car.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|solutionrelative:systemsprogrammingassignment\\car.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|c:\\users\\mikey\\source\\repos\\systemsprogrammingassessment\\systemsprogrammingassignment\\systemsprogrammingassignment\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B9B869A-55CE-407F-8CC8-1928D63A5F57}|SystemsProgrammingAssignment\\SystemsProgrammingAssignment.csproj|solutionrelative:systemsprogrammingassignment\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,16 +42,17 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Vehicle.cs",
               "DocumentMoniker": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\Vehicle.cs",
               "RelativeDocumentMoniker": "SystemsProgrammingAssignment\\Vehicle.cs",
               "ToolTip": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\Vehicle.cs",
               "RelativeToolTip": "SystemsProgrammingAssignment\\Vehicle.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-15T12:36:07.735Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -41,7 +62,7 @@
               "RelativeDocumentMoniker": "SystemsProgrammingAssignment\\Program.cs",
               "ToolTip": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\Program.cs",
               "RelativeToolTip": "SystemsProgrammingAssignment\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHwAAAAAAAAAAAAwwIQAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-15T12:35:17.814Z",
               "IsPinned": true,
@@ -50,6 +71,71 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Motorcycle.cs",
+              "DocumentMoniker": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\Motorcycle.cs",
+              "RelativeDocumentMoniker": "SystemsProgrammingAssignment\\Motorcycle.cs",
+              "ToolTip": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\Motorcycle.cs",
+              "RelativeToolTip": "SystemsProgrammingAssignment\\Motorcycle.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-29T12:49:59.673Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Car.cs",
+              "DocumentMoniker": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\Car.cs",
+              "RelativeDocumentMoniker": "SystemsProgrammingAssignment\\Car.cs",
+              "ToolTip": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\Car.cs",
+              "RelativeToolTip": "SystemsProgrammingAssignment\\Car.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-29T12:45:57.531Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DummyData.cs",
+              "DocumentMoniker": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\DummyData.cs",
+              "RelativeDocumentMoniker": "SystemsProgrammingAssignment\\DummyData.cs",
+              "ToolTip": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\DummyData.cs",
+              "RelativeToolTip": "SystemsProgrammingAssignment\\DummyData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGwAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-29T12:41:50.699Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "HGV.cs",
+              "DocumentMoniker": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\HGV.cs",
+              "RelativeDocumentMoniker": "SystemsProgrammingAssignment\\HGV.cs",
+              "ToolTip": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\HGV.cs",
+              "RelativeToolTip": "SystemsProgrammingAssignment\\HGV.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-22T12:20:07.268Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\User.cs",
+              "RelativeDocumentMoniker": "SystemsProgrammingAssignment\\User.cs",
+              "ToolTip": "C:\\Users\\Mikey\\source\\repos\\SystemsProgrammingAssessment\\SystemsProgrammingAssignment\\SystemsProgrammingAssignment\\User.cs",
+              "RelativeToolTip": "SystemsProgrammingAssignment\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-22T12:08:43.994Z",
+              "EditorCaption": ""
             }
           ]
         }
