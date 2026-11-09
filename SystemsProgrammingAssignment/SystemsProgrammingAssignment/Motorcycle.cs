@@ -5,7 +5,7 @@
     {
         this.EngineCapacity = EngineCapacity;
     }
-    public int ReturnMaxLoadWeight()
+    public int ReturnEngineCapacity()
     {
         return EngineCapacity;
     }

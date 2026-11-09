@@ -11,8 +11,10 @@ namespace SystemsProgrammingAssignment
         //data
       
         static List<Vehicle> vehicles = new List<Vehicle>() { };
+        static List<User> users = new List<User>() { };
+        static List<Booking> bookings = new List<Booking>() { };
 
-        
+
 
         //class handling
         public static Dictionary<string, string> DisplayAndReturnVehicleDictionary(List<Vehicle> VehicleList)
@@ -116,8 +118,48 @@ namespace SystemsProgrammingAssignment
         //main
         static void Main(string[] args)
         {
+            User loggedinUser = null;
+            //MANAGERS
+            PasswordService passwordService = new PasswordService();
+            UserService userService = new UserService();
+            MembershipManager membershipManager = new MembershipManager();
+            BookingManager bookingManager = new BookingManager();
             //INTERNAL FUNCTIONS 
+            void AccountCreation()
+            {
+                Console.Clear();
+                TitleCard();
+                Console.WriteLine("     ---  ACCOUNT CREATION SCREEN  ---     \n");
+                string username = "";
+                Console.WriteLine(userService.ReturnUsernameRequirements());
+                while (true)
+                {
+                    
+                    username = Console.ReadLine();
+                    if (userService.VerifyUsername(username,users))
+                    {
+                        break;
+                    }
+                }
+                string password = "";
+                Console.WriteLine(passwordService.ReturnPasswordRequirements());
+                while (true)
+                {
 
+                    password = Console.ReadLine();
+                    if (passwordService.VerifyPassword(password))
+                    {
+                        password = passwordService.HashPassword(password);
+                        break;
+                    }
+                }
+                User createdUser = new User(userService.GenerateID(users), username, password, 0, 1);
+                users.Add(createdUser);
+                loggedinUser = createdUser;
+                Console.WriteLine("Account Created Successfully!");
+                //SAVE HERE
+
+            }
             void VehicleSelection()
             {
                 bool looping = true;
@@ -136,7 +178,47 @@ namespace SystemsProgrammingAssignment
                         case 1:
                             if (filteredVehicles == null)
                             {
-                                SelectVehicleFromGivenList(vehicles);
+                                Vehicle vehicle = SelectVehicleFromGivenList(vehicles);
+                                if(vehicle!=null)
+                                {
+                                    //vehicle selected screen
+                                    string vehicleMembership = membershipManager.memberships[vehicle.ReturnMembershipLevel()].ReturnName().ToUpper();
+                                    Console.Clear();
+                                    TitleCard();
+                                    Console.WriteLine($"     ---  YOU HAVE SELECTED {vehicle.ReturnRegPlate()} ---     \nMAKE - {vehicle.ReturnMake()}\nMODEL - {vehicle.ReturnModel()}");
+                                    if(vehicle is Car car){Console.WriteLine($"NUMBER OF SEATS - {car.ReturnNumberOfSeats()}");}
+                                    else if(vehicle is HGV hgv){Console.WriteLine($"MAX LOAD WEIGHT - {hgv.ReturnMaxLoadWeight()}");}
+                                    else if(vehicle is Motorcycle motorcycle){Console.WriteLine($"MAX LOAD WEIGHT - {motorcycle.ReturnEngineCapacity()}");}
+                                    Console.WriteLine($"MEMBERSHIP REQUIRED - {vehicleMembership}\nCOST PER HOUR - £{vehicle.ReturnCostPerHour().ToString("0.00")}");
+                                    if (loggedinUser.ReturnMembershipLevel()>=vehicle.ReturnMembershipLevel())
+                                    {
+                                        //membership valid
+                                        //check if vehicle booked 
+                                        if (!bookingManager.IsVehicleAlreadyBooked(vehicle,bookings))
+                                        {
+                                            //TODO, CHECK IF USER CURRENT BOOKING
+                                            Console.WriteLine("need to if u booked check lol");
+                                            Console.ReadLine();
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("UNABLE TO BOOK - VEHICLE ALREADY BOOKED");
+                                            Console.ReadLine();
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"UNABLE TO BOOK - NEED {vehicleMembership} MEMBERSHIP OR HIGHER");
+                                        Console.ReadLine();
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Error - Vehicle not found");
+
+                                }
                             }
                             else
                             {
@@ -173,24 +255,51 @@ namespace SystemsProgrammingAssignment
             BeginVehicleDataLoading();
             
             //CORE LOOP
-
+            
             //TODO login
             while (true)
             {
                 bool exit = false;
                 Console.Clear();
                 TitleCard();
-                Console.WriteLine("1) Select a vehicle");
-                string input = Console.ReadLine();
-                int caseInput = TryConvertToInt(input, -1);
-                switch (caseInput){
-                    case 1:
-                        VehicleSelection();
-                        break;
-                    default:
-                        Console.WriteLine("Invalid selection. Please try again."); 
-                        break;
-               
+                //LOGGED OUT
+                if (loggedinUser == null)
+                {
+                    Console.WriteLine("1) Create account");
+                    string input = Console.ReadLine();
+                    int caseInput = TryConvertToInt(input, -1);
+                    switch (caseInput)
+                    {
+                        case 1:
+                            AccountCreation();
+                            break;
+                        default:
+                            Console.WriteLine("Invalid selection. Please try again.");
+                            break;
+
+                    }
+                }
+                //logged in
+                else
+                {
+                    Console.WriteLine($"Welcome, {loggedinUser.ReturnUsername()}! You are using Autorenter as a {membershipManager.memberships[loggedinUser.ReturnMembershipLevel()].ReturnName()} member.\n1) Select a vehicle\n2) Log out");
+                    string input = Console.ReadLine();
+                    int caseInput = TryConvertToInt(input, -1);
+                    switch (caseInput)
+                    {
+                        case 1:
+                            VehicleSelection();
+                            break;
+                        case 2:
+                            loggedinUser = null;
+                            Console.WriteLine("Logged out successfully!");
+                            break;
+                        default:
+                            Console.WriteLine("Invalid selection. Please try again.");
+                            break;
+
+                    }
+                    
                 }
                 if (!exit)
                 {
@@ -198,6 +307,8 @@ namespace SystemsProgrammingAssignment
                     Console.ReadLine();
 
                 }
+
+
             }
             
 

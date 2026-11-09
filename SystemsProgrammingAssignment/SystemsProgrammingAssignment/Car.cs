@@ -5,7 +5,7 @@
     {
         this.NumberOfSeats = MaxLoadWeight;
     }
-    public int ReturnMaxLoadWeight()
+    public int ReturnNumberOfSeats()
     {
         return NumberOfSeats;
     }
