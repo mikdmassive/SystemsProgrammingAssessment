@@ -1,0 +1,59 @@
+
+# Visual Studio user-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# Visual Studio cache
+.vs/
+
+# Build output directories
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]nyCPU/
+
+# Compiled binaries
+*.dll
+*.exe
+*.pdb
+*.obj
+*.ilk
+*.iobj
+*.pch
+*.cache
+
+# Visual Studio temporary files
+*.tmp
+*.log
+*.tlog
+
+# Test results
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# NuGet packages
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+
+# Generated files
+artifacts/
+Generated_Code/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backup files
+*.bak
+*.old
+*~

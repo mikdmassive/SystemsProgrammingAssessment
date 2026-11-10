@@ -88,6 +88,7 @@ namespace SystemsProgrammingAssignment
             }
             return null;
         }
+
         public static void BeginVehicleDataLoading()
         {
             DummyData dummyData = new DummyData();
@@ -125,6 +126,43 @@ namespace SystemsProgrammingAssignment
             MembershipManager membershipManager = new MembershipManager();
             BookingManager bookingManager = new BookingManager();
             //INTERNAL FUNCTIONS 
+            void LogIn()
+            {
+                Console.Clear();
+                TitleCard();
+                Console.WriteLine("          ---  LOG IN SCREEN  ---          \n");
+                Console.WriteLine("Enter your username:");
+                string id = null;
+                while (id==null)
+                {
+                    id = userService.GetUserIDFromUsername(users,Console.ReadLine());
+                    if (id==null)
+                    {
+                        Console.WriteLine("User not found.");
+                    }
+                }
+                User user = users.FirstOrDefault(u => u.ReturnUserID() == id);
+                if (user != null)
+                {
+                    Console.WriteLine("Enter your password:");
+                    while (true)
+                    {
+                        string password = Console.ReadLine();
+                        if (passwordService.VerifyHashedPassword(password, user.ReturnPasswordHash()))
+                        {
+                            loggedinUser = user;
+                            Console.WriteLine("Login successful!");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect password, try again");
+                        }
+                    }
+                    
+                }
+                else {Console.WriteLine("Error - User not found"); }
+            }
             void AccountCreation()
             {
                 Console.Clear();
@@ -319,7 +357,8 @@ namespace SystemsProgrammingAssignment
                             Console.WriteLine("Returning to main menu...");
                             break;
                         default:
-                            Console.WriteLine("Invalid selection. Please try again.");
+                            Console.WriteLine("Invalid selection. Please try again. Press ENTER to continue.");
+                            Console.ReadLine();
                             break;
 
                     }
@@ -351,13 +390,16 @@ namespace SystemsProgrammingAssignment
                 //LOGGED OUT
                 if (loggedinUser == null)
                 {
-                    Console.WriteLine("1) Create account");
+                    Console.WriteLine("1) Create account\n2) Log in");
                     string input = Console.ReadLine();
                     int caseInput = TryConvertToInt(input, -1);
                     switch (caseInput)
                     {
                         case 1:
                             AccountCreation();
+                            break;
+                        case 2:
+                            LogIn();
                             break;
                         default:
                             Console.WriteLine("Invalid selection. Please try again.");

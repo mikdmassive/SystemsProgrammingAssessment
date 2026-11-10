@@ -49,5 +49,10 @@
         while (users.Any(user=>user.ReturnUserID()==id));
         return id;
     }
+    public string GetUserIDFromUsername(List<User> users,string username)
+    {
+        string id = users.FirstOrDefault(user => user.ReturnUsername() == username)?.ReturnUserID();
+        return id;
+    }
 
 }
