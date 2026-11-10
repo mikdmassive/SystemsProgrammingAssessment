@@ -19,4 +19,5 @@
     {
         return $"{Name} Membership (£{Price.ToString("0.00")} per month - {Description})";
     }
+    public int ReturnMembershipLevel() { return Level;}
 }

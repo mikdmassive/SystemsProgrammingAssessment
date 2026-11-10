@@ -62,6 +62,10 @@
 
         return usersBookings;
     }
+    public List<Booking> returnUsersPreviousBookings(User user, List<Booking> bookings)
+    {
+        return returnUsersBookings(user, bookings).Where(booking => !booking.IsBookingActive()).ToList();
+    }
     public Booking returnUserActiveBooking(User user, List<Booking> bookings)
     {
         Booking activeBooking = null;
