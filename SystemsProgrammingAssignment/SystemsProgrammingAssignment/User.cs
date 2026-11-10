@@ -15,6 +15,7 @@
     }
     public string ReturnUserID() {  return UserID; }
     public string ReturnUsername() {  return Username; }
+    public string ReturnPasswordHash() {  return PasswordHash; }
     public int ReturnMembershipLevel() { return MembershipLevel; }
 
 }
