@@ -28,7 +28,7 @@ public class Vehicle
     public float ReturnCostPerHour() { return CostPerHour; }
     public string ReturnBasicVehicleInfoInList()
     {
-        return $"{Make} {Model} ({RegPlate}) - £{CostPerHour} per hour.\" ";
+        return $"{Make} {Model} ({RegPlate}) - £{CostPerHour} per hour ";
     }
    
 }

@@ -198,6 +198,62 @@ namespace SystemsProgrammingAssignment
                 //SAVE HERE
 
             }
+            void BookVehicle(Vehicle vehicle)
+            {
+                int minbookinghour = bookingManager.ReturnMinBookingTimeInHours();
+                int maxbookinghour = bookingManager.ReturnMaxBookingTimeInHours();
+                Console.WriteLine($"Please enter how long you would like to book the vehicle for in hours ({minbookinghour}-{maxbookinghour}), or type EXIT to cancel:");
+                bool looping = true;
+                while (looping)
+                {
+                    string input = Console.ReadLine();
+                    if (!string.IsNullOrEmpty(input))
+                    {
+                        if (input == "CANCEL")
+                        {
+                            looping = false;
+                        }
+                        else
+                        {
+
+                            int intinput = TryConvertToInt(input, -1);
+                            if (intinput>=minbookinghour&&intinput<=maxbookinghour)
+                            {
+                                looping = false;
+
+                                //prepare booking
+                                Console.WriteLine($"THIS WILL COST £{(vehicle.ReturnCostPerHour()*intinput).ToString("0.00")}\n1) Confirm\n2) Cancel");
+                                bool bookingLoop = true;
+
+                                while (bookingLoop)
+                                {
+                                    input = Console.ReadLine();
+                                    int caseInput = TryConvertToInt(input, -1);
+                                    switch (caseInput)
+                                    {
+                                        case 1:
+                                            Booking booking = bookingManager.CreateBooking(loggedinUser, vehicle, intinput, bookings);
+                                            bookings.Add(booking);
+                                            Console.WriteLine("Booking Confirmed!");
+                                          
+                                            bookingLoop = false;
+                                            break;
+                                        case 2:
+                                            bookingLoop = false;
+                                            break;
+                                        default:
+                                            Console.WriteLine("Invalid selection. Please try again.");
+                                            break;
+
+                                    }
+                                }
+                            }
+                            else { Console.WriteLine($"Invalid,please enter a time frame between {minbookinghour}-{maxbookinghour}"); }
+                        }
+                    }
+                    else { Console.WriteLine("Invalid,Try Again"); }
+                }
+            }
             void VehicleSelection()
             {
                 bool looping = true;
@@ -234,9 +290,39 @@ namespace SystemsProgrammingAssignment
                                         //check if vehicle booked 
                                         if (!bookingManager.IsVehicleAlreadyBooked(vehicle,bookings))
                                         {
-                                            //TODO, CHECK IF USER CURRENT BOOKING
-                                            Console.WriteLine("need to if u booked check lol");
-                                            Console.ReadLine();
+                                            //check if user has booking
+                                            if (!bookingManager.IsUserAlreadyGotABooking(loggedinUser, bookings))
+                                            {
+                                                //valid
+                                                Console.WriteLine("AVAILABLE TO BOOK\n1) Start Booking\n2) Cancel");
+                                               
+                                                bool bookingLoop = true;
+                                                while (bookingLoop)
+                                                {
+                                                    input = Console.ReadLine();
+                                                    caseInput = TryConvertToInt(input, -1);
+                                                    switch (caseInput)
+                                                    {
+                                                        case 1:
+                                                            BookVehicle(vehicle);
+                                                            bookingLoop = false;
+                                                            break;
+                                                        case 2:
+                                                            bookingLoop = false;
+                                                            break;
+                                                        default:
+                                                            Console.WriteLine("Invalid selection. Please try again.");
+                                                            break;
+
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("UNABLE TO BOOK - YOU ALREADY HAVE AN ACTIVE BOOKING");
+                                                Console.ReadLine();
+
+                                            }
                                         }
                                         else
                                         {
@@ -324,7 +410,7 @@ namespace SystemsProgrammingAssignment
                 //logged in
                 else
                 {
-                    Console.WriteLine($"Welcome, {loggedinUser.ReturnUsername()}! You are using Autorenter as a {membershipManager.memberships[loggedinUser.ReturnMembershipLevel()].ReturnName()} member.\n1) Select a vehicle\n2) Log out");
+                    Console.WriteLine($"Welcome, {loggedinUser.ReturnUsername()}! You are using Autorenter as a {membershipManager.memberships[loggedinUser.ReturnMembershipLevel()].ReturnName()} member.\n1) Select a vehicle\n2) Log out\n3) Check active booking\n4) Return previous bookings");
                     string input = Console.ReadLine();
                     int caseInput = TryConvertToInt(input, -1);
                     switch (caseInput)
@@ -335,6 +421,36 @@ namespace SystemsProgrammingAssignment
                         case 2:
                             loggedinUser = null;
                             Console.WriteLine("Logged out successfully!");
+                            break;
+                        case 3:
+                            Booking activeBooking = bookingManager.returnUserActiveBooking(loggedinUser, bookings);
+                            if (activeBooking != null)
+                            {
+                                Vehicle v = GetVehicleFromID(activeBooking.ReturnVehicleID());
+                                if (v != null)
+                                {
+                                    Console.WriteLine($"{v.ReturnBasicVehicleInfoInList()}\n{activeBooking.ReturnBookingInfo()}");
+                                }
+                            }
+                            else { Console.WriteLine("You have no active booking."); }
+                            break;
+                        case 4:
+                            List<Booking> usersBookings = bookingManager.returnUsersBookings(loggedinUser, bookings);
+                            if (usersBookings.Count>0)
+                            {
+                                for (int i = 0;i<usersBookings.Count;i++)
+                                {
+                                    Booking booking = usersBookings[i];
+                                    Vehicle v = GetVehicleFromID(booking.ReturnVehicleID());
+                                    if (v!=null)
+                                    {
+                                        Console.WriteLine($"{i + 1}) {v.ReturnBasicVehicleInfoInList()}");
+                                        //TODO MORE INFO AND CHECK ACTIVE
+                                    }
+                                }
+                            }
+                            else { Console.WriteLine("No bookings found"); }
+                            Console.ReadLine();
                             break;
                         default:
                             Console.WriteLine("Invalid selection. Please try again.");
