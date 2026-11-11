@@ -17,66 +17,7 @@ namespace SystemsProgrammingAssignment
 
 
         //class handling
-        public static Dictionary<string, string> DisplayAndReturnVehicleDictionary(List<Vehicle> VehicleList)
-        {
-            Dictionary<string, string> vehicleDictionary = new Dictionary<string, string>();
-            for (int i = 0; i < VehicleList.Count; i++)
-            {
-                Vehicle v = VehicleList[i];
-                string vehicleNumber = (i+1).ToString();
-                vehicleDictionary.Add(vehicleNumber, v.ReturnVehicleID());
-                Console.WriteLine($"{vehicleNumber}) {v.ReturnBasicVehicleInfoInList()}");
-            }
-            return vehicleDictionary;
-        }
-        public static Vehicle SelectVehicleFromGivenList(List<Vehicle> VehicleList)
-        {
-            Vehicle SelectedVehicle = null;
-            Dictionary<string, string> vehicleDictionary = DisplayAndReturnVehicleDictionary(VehicleList);
-            if (vehicleDictionary.Count>0)
-            {
-                while (SelectedVehicle==null)
-                {
-                    Console.WriteLine("Please select a vehicle via corrosponding number, or type \"exit\" to stop:");
-                    string userInput = Console.ReadLine();
-                    if (userInput != null)
-                    {
-                        if (userInput.ToLower() == "exit")
-                        {
-                            break;
-                        }
-                        else if (vehicleDictionary.ContainsKey(userInput))
-                        {
-                            string selectedVehicleID = vehicleDictionary[userInput];
-                            if (GetVehicleFromID(selectedVehicleID)!=null)
-                            {
-                                SelectedVehicle = GetVehicleFromID(selectedVehicleID);
-                            }
-                            else
-                            {
-                                Console.WriteLine("Error - Vehicle not found");
-                            }
-;
-
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid selection. Please try again.");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Please enter something.");
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("No vehicles found under these conditions.");
-                Console.ReadLine();
-            }
-            return SelectedVehicle;
-        }
+        
         public static Vehicle GetVehicleFromID(string ID)
         {
             for (int i = 0; i < vehicles.Count; i++)
@@ -138,6 +79,68 @@ namespace SystemsProgrammingAssignment
             UserService userService = new UserService();
             MembershipManager membershipManager = new MembershipManager();
             BookingManager bookingManager = new BookingManager();
+            //CLASS MANAGEMENT
+            Vehicle SelectVehicleFromGivenList(List<Vehicle> VehicleList)
+            {
+                Vehicle SelectedVehicle = null;
+                Dictionary<string, string> vehicleDictionary = DisplayAndReturnVehicleDictionary(VehicleList);
+                if (vehicleDictionary.Count > 0)
+                {
+                    while (SelectedVehicle == null)
+                    {
+                        Console.WriteLine("Please select a vehicle via corrosponding number, or type \"exit\" to stop:");
+                        string userInput = Console.ReadLine();
+                        if (userInput != null)
+                        {
+                            if (userInput.ToLower() == "exit")
+                            {
+                                break;
+                            }
+                            else if (vehicleDictionary.ContainsKey(userInput))
+                            {
+                                string selectedVehicleID = vehicleDictionary[userInput];
+                                if (GetVehicleFromID(selectedVehicleID) != null)
+                                {
+                                    SelectedVehicle = GetVehicleFromID(selectedVehicleID);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Error - Vehicle not found");
+                                }
+    ;
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid selection. Please try again.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Please enter something.");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No vehicles found under these conditions.");
+                    Console.ReadLine();
+                }
+                return SelectedVehicle;
+            }
+
+            Dictionary<string, string> DisplayAndReturnVehicleDictionary(List<Vehicle> VehicleList)
+            {
+                Dictionary<string, string> vehicleDictionary = new Dictionary<string, string>();
+                for (int i = 0; i < VehicleList.Count; i++)
+                {
+                    Vehicle v = VehicleList[i];
+                    string vehicleNumber = (i + 1).ToString();
+                    vehicleDictionary.Add(vehicleNumber, v.ReturnVehicleID());
+                    Console.WriteLine($"{vehicleNumber}) {v.ReturnBasicVehicleInfoInList()} ({membershipManager.ReturnMembership(v.ReturnMembershipLevel()).ReturnName().ToUpper()}+)");
+                }
+                return vehicleDictionary;
+            }
             //INTERNAL FUNCTIONS 
             void LogIn()
             {
@@ -274,6 +277,7 @@ namespace SystemsProgrammingAssignment
                 int membershipFilter =-1;
                 string makeFilter = "";
                 float priceFilter = -1;
+                string vehicleTypeFilter = "";
                 while (looping)
                 {
                     List<Vehicle> filteredVehicles = vehicles;
@@ -283,7 +287,7 @@ namespace SystemsProgrammingAssignment
                     TitleCard();
                     Console.WriteLine("     ---  VEHICLE SELECTION SCREEN  ---     \n");
                     //apply filters 
-                    if (membershipFilter != -1 || makeFilter != "" || priceFilter != -1)
+                    if (membershipFilter != -1 || makeFilter != "" || priceFilter != -1|| vehicleTypeFilter!="")
                     {
                         Console.WriteLine("FILTERS APPLIED:");
                         if (membershipFilter != -1)
@@ -301,6 +305,26 @@ namespace SystemsProgrammingAssignment
                         {
                             filteredVehicles = filteredVehicles.Where(v => v.ReturnCostPerHour() <= priceFilter).ToList();
                             Console.WriteLine($" - MAX PRICE: £{priceFilter.ToString("0.00")}");
+                        }
+                        if (vehicleTypeFilter != "")
+                        {
+                            if (vehicleTypeFilter == "Car")
+                            {
+                                filteredVehicles = filteredVehicles.Where(v => v is Car car).ToList();
+
+                            }
+                            else if (vehicleTypeFilter == "HGV")
+                            {
+                                filteredVehicles = filteredVehicles.Where(v => v is HGV hgv).ToList();
+
+                            }
+                            else if (vehicleTypeFilter == "Motorcycle")
+                            {
+                                filteredVehicles = filteredVehicles.Where(v => v is Motorcycle motorcycle).ToList();
+
+                            }
+                            Console.WriteLine($" - VEHICLE TYPE: {vehicleTypeFilter.ToUpper()}");
+
                         }
                         Console.WriteLine();
                     }
@@ -386,7 +410,7 @@ namespace SystemsProgrammingAssignment
                             }
                             break;
                         case 2:
-                            Console.WriteLine("Please select a filter:\n1) Remove filters \n2) Membership\n3) Search Make\n4) Maximum Price");
+                            Console.WriteLine("Please select a filter:\n1) Remove filters \n2) Membership\n3) Search Make\n4) Maximum Price\n5) Vehicle Type");
                             string filterInput = Console.ReadLine();
                             int casefilterInput = TryConvertToInt(filterInput, -1);
                             switch (casefilterInput)
@@ -395,6 +419,7 @@ namespace SystemsProgrammingAssignment
                                     membershipFilter = -1;
                                     priceFilter = -1;
                                     makeFilter = "";
+                                    vehicleTypeFilter = "";
                                     Console.WriteLine("Filters removed!");
                                     break;
                                 case 2:
@@ -434,6 +459,28 @@ namespace SystemsProgrammingAssignment
 
                                     }
                                     else { Console.WriteLine("Invalid Input. Enter a price £5-1000"); }
+                                    break;
+                                case 5:
+                                    Console.WriteLine("Select a vehicle type\n1) Car\n2) HGV\n3) Motorcycle");
+                                    int VehicleTypeInput = TryConvertToInt(Console.ReadLine(), -1);
+                                    switch (VehicleTypeInput)
+                                    {
+                                        case 1:
+                                            vehicleTypeFilter = "Car";
+                                            Console.WriteLine("Filter applied!");
+                                            break;
+                                        case 2:
+                                            vehicleTypeFilter = "HGV";
+                                            Console.WriteLine("Filter applied!");
+                                            break;
+                                        case 3:
+                                            vehicleTypeFilter = "Motorcycle";
+                                            Console.WriteLine("Filter applied!");
+                                            break;
+                                        default:
+                                            Console.WriteLine("Invalid selection.");
+                                            break;
+                                    }
                                     break;
                                 default:
                                     Console.WriteLine("Invalid selection.");

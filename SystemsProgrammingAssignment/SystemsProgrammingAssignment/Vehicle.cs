@@ -32,7 +32,7 @@ public class Vehicle
     }
     public string ReturnBasicVehicleInfoInList()
     {
-        return $"{ReturnBasicVehicleInfo()} - £{CostPerHour} per hour ";
+        return $"{ReturnBasicVehicleInfo()} - £{CostPerHour} per hour";
     }
    
 }
