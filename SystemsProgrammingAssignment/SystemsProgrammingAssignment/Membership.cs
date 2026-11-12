@@ -15,6 +15,10 @@
     {
         return Name;
     }
+    public float ReturnPrice()
+    {
+        return Price;
+    }
     public string ReturnInfo()
     {
         return $"{Name} Membership (£{Price.ToString("0.00")} per month - {Description})";

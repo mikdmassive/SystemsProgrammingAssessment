@@ -17,5 +17,8 @@
     public string ReturnUsername() {  return Username; }
     public string ReturnPasswordHash() {  return PasswordHash; }
     public int ReturnMembershipLevel() { return MembershipLevel; }
-
+    public int ReturnAccessLevel() { return AccessLevel; }
+    public void SetMembershipLevel(int MembershipLevel) { this.MembershipLevel = MembershipLevel; }
+    public bool IsAdmin() { return ReturnAccessLevel() > 1; }
+        
 }

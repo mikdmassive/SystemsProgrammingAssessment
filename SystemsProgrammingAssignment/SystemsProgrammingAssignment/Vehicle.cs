@@ -34,5 +34,4 @@ public class Vehicle
     {
         return $"{ReturnBasicVehicleInfo()} - £{CostPerHour} per hour";
     }
-   
 }

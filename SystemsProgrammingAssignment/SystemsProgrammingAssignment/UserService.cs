@@ -54,5 +54,4 @@
         string id = users.FirstOrDefault(user => user.ReturnUsername() == username)?.ReturnUserID();
         return id;
     }
-
 }

@@ -36,6 +36,7 @@
 
         return booked;
     }
+
     public bool IsUserAlreadyGotABooking(User user, List<Booking> bookings)
     {
         bool booked = false;

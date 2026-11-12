@@ -6,6 +6,7 @@
     private DateTime BookingStart;
     private DateTime BookingEnd;
     private DateTime? TimeReturned;
+    private bool ReturnVerified = false;
     public Booking(string BookingID,string VehicleID,string UserID, DateTime BookingStart,DateTime BookingEnd)
     {
         this.BookingID = BookingID; 
@@ -21,20 +22,12 @@
     public DateTime ReturnBookingStart(){return BookingStart; }
     public DateTime ReturnBookingEnd(){return BookingEnd; }
     public DateTime? ReturnTimeReturned() { return TimeReturned;}
+    public bool IsReturned(){return ReturnVerified;}
     public bool IsBookingActive()
     {
-        bool active = false;
-        DateTime currentTime = DateTime.Now;
-        if (currentTime < BookingEnd)
-        {
-            active = true;
-        }
-        else if (TimeReturned == null)
-        {
-            active = true;
-        }
-        return active;
+        return (!IsReturned());
     }
+    public bool IsAwaitingReturnVerification() {  return !ReturnVerified&& TimeReturned != null; }
     public bool IsOverdue()
     {
         DateTime currentTime = DateTime.Now;
@@ -44,6 +37,12 @@
     public string ReturnBookingInfo()
     {
         TimeSpan remaining = BookingEnd - DateTime.Now;
-        return $"{BookingStart}-{BookingEnd} \n{(IsOverdue()? "OVERDUE" :$"Return in {(remaining.Days>0 ? $"{remaining.Days} days, {remaining.Hours} hours and {remaining.Minutes}" : $"{remaining.Hours} hours and {remaining.Minutes}")} minutes.")}";
+        return $"{BookingStart}-{BookingEnd} \n{(IsAwaitingReturnVerification()?$"Return logged at {TimeReturned}":$"{(IsOverdue() ? "OVERDUE, RETURN VEHICLE NOW" : $"Return in {(remaining.Days > 0 ? $"{remaining.Days} days, {remaining.Hours} hours and {remaining.Minutes}" : $"{remaining.Hours} hours and {remaining.Minutes}")} minutes.")}")}";
     }
+    public void SetReturnTime(DateTime? returnstatus) { TimeReturned = returnstatus; }
+    public void VerifyReturn()
+    {
+        ReturnVerified = true;
+    }
+
 }

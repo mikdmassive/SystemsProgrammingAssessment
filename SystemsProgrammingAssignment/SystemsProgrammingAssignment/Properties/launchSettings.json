@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SystemsProgrammingAssignment": {
+      "commandName": "Project",
+      "commandLineArgs": "-dummydata admin\r\n"
+    }
+  }
+}

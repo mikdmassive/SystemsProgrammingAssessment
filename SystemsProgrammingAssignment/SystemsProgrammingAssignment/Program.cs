@@ -13,11 +13,13 @@ namespace SystemsProgrammingAssignment
         static List<Vehicle> vehicles = new List<Vehicle>() { };
         static List<User> users = new List<User>() { };
         static List<Booking> bookings = new List<Booking>() { };
+        static bool usedummydata = true;//change false later
+        static bool createadmin = false;
 
 
 
         //class handling
-        
+
         public static Vehicle GetVehicleFromID(string ID)
         {
             for (int i = 0; i < vehicles.Count; i++)
@@ -30,13 +32,28 @@ namespace SystemsProgrammingAssignment
             }
             return null;
         }
-
-        public static void BeginVehicleDataLoading()
+        public static User GetUserFromID(string id) { return users.FirstOrDefault(u => u.ReturnUserID() == id); }
+        
+        public static void LoadAllData()
         {
-            DummyData dummyData = new DummyData();
-            vehicles = dummyData.vehicles; //DUMMY DATA DELETE LATER
-        }
+            if (!usedummydata)//REAL DATA
+            {
 
+            }
+            else//dummy data
+            {
+                DummyData dummyData = new DummyData();
+                vehicles = dummyData.vehicles; 
+            }
+        }
+       
+        public static void SaveAll()
+        {
+            if (!usedummydata)
+            {
+
+            }
+        }
         //catch verfications
         public static int TryConvertToInt(string input,int defaultNumber)
         {
@@ -142,6 +159,136 @@ namespace SystemsProgrammingAssignment
                 return vehicleDictionary;
             }
             //INTERNAL FUNCTIONS 
+            void AdminMenu()
+            {
+                bool looping = true;
+                while (looping)
+                {
+                    Console.Clear();
+                    TitleCard();
+                    Console.WriteLine("          --  ADMIN SCREEN  --        \n1) Confirm Vehicle Return\n2) Vehicle Manager\n3) User Manager\n4) Exit");
+                    string input = Console.ReadLine();
+                    int caseInput = TryConvertToInt(input, -1);
+                    switch (caseInput)
+                    {
+                        case 1:
+                            List<Booking> confirmingbookings = bookings.Where(b => b.IsAwaitingReturnVerification()).ToList();
+                            Dictionary<int,Booking> confirmBookingDictionary = new Dictionary<int, Booking>() { };
+                            foreach (Booking booking in confirmingbookings)
+                            {
+                                int key = confirmBookingDictionary.Count() + 1;
+                                confirmBookingDictionary.Add(key, booking);
+                                Vehicle v = GetVehicleFromID(booking.ReturnVehicleID());
+                                User u = GetUserFromID(booking.ReturnUserID());
+                                if (v!=null&& u!=null)
+                                {
+                                    Console.WriteLine($"{key}) {v.ReturnBasicVehicleInfo()} booked by {u.ReturnUsername()} - Claims return at {booking.ReturnTimeReturned()}");
+                                }
+                            }
+                            if (confirmBookingDictionary.Count > 0)
+                            {
+                                Console.WriteLine("Please select a vehicle from this list using the corisponding number.");
+                                caseInput = TryConvertToInt(input, -1);
+                                if (confirmBookingDictionary.ContainsKey(caseInput))
+                                {
+                                    Booking booking = confirmBookingDictionary[caseInput];
+                                    Console.WriteLine("Is this vehicle actually returned?\n1) Yes\n2) No");
+                                    input = Console.ReadLine();
+                                    caseInput = TryConvertToInt(input, -1);
+                                    switch (caseInput)
+                                    {
+                                        case 1:
+                                            booking.VerifyReturn();
+                                            SaveAll();
+
+                                            break;
+                                        case 2:
+                                            booking.SetReturnTime(null);
+                                            SaveAll();
+
+                                            break;
+                                        default:
+                                            Console.WriteLine("Invalid selection. Please try again.");
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Error, booking not found.");
+                                }
+                                
+                            }
+                            else { Console.WriteLine("No booking waiting for return confirmation"); }
+                            Console.WriteLine("PRESS ENTER TO CONTINUE");
+                            Console.ReadLine();
+                            break;
+                        case 2:
+                            //vehicle management
+
+                            break;
+                        case 3:
+
+                            break;
+                        case 4:
+                            looping = false;
+                            break;
+                        default:
+                            Console.WriteLine("Invalid selection. Please try again.");
+                            break;
+
+                    }
+                }
+            }
+            void ManageMembership()
+            {
+                bool looping = true;
+                while (looping)
+                {
+                    Console.Clear();
+                    TitleCard();
+                    Console.WriteLine("          --  MEMBERSHIP MANAGER  --        \n");
+                    Console.WriteLine($"Select a membership:");
+                    foreach (Membership membership in membershipManager.ReturnMemberships())
+                    {
+                        Console.WriteLine($"{membership.ReturnMembershipLevel()}) {membership.ReturnInfo()}");
+                    }
+                    Console.WriteLine("Or type \"exit\" to exit");
+                    string input = Console.ReadLine();
+                    int caseInput = TryConvertToInt(input, -1);
+                    if (membershipManager.memberships.ContainsKey(caseInput))
+                    {
+                        Membership membership = membershipManager.ReturnMembership(caseInput);
+                        Console.WriteLine($"You have selected {membership.ReturnName()} membership. This will cost {membership.ReturnPrice().ToString("0.00")} per month. Would you like to purchase this?\n (THIS IS A MOCK PURCHASE, THIS WILL NOT CHARGE YOU)\n1) Yes\n2) No");
+                        string purchaseInput = Console.ReadLine();
+                        if (purchaseInput == "1" || purchaseInput.ToLower()=="yes")
+                        {
+                            loggedinUser.SetMembershipLevel(membership.ReturnMembershipLevel());
+                            Console.WriteLine($"You have successfully purchased {membership.ReturnName()} membership!");
+                            SaveAll();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Purchase cancelled.");
+                        }
+
+                    }
+                    else if (!string.IsNullOrEmpty(input))
+                    {
+                        if (input.ToLower() == "exit")
+                        {
+                            looping = false;
+                        }
+               
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid selection. Please try again.");
+                    }
+                    Console.WriteLine("Press ENTER to continue.");
+                    Console.ReadLine();
+                }
+            }
+
             void LogIn()
             {
                 Console.Clear();
@@ -212,6 +359,7 @@ namespace SystemsProgrammingAssignment
                 loggedinUser = createdUser;
                 Console.WriteLine("Account Created Successfully!");
                 //SAVE HERE
+                SaveAll();
 
             }
             void BookVehicle(Vehicle vehicle)
@@ -251,7 +399,7 @@ namespace SystemsProgrammingAssignment
                                             Booking booking = bookingManager.CreateBooking(loggedinUser, vehicle, intinput, bookings);
                                             bookings.Add(booking);
                                             Console.WriteLine("Booking Confirmed!");
-                                          
+                                            SaveAll();
                                             bookingLoop = false;
                                             break;
                                         case 2:
@@ -430,7 +578,7 @@ namespace SystemsProgrammingAssignment
                                     }
                                     string filterInputMembership = Console.ReadLine();
                                     int casefilterInputMembership = TryConvertToInt(filterInputMembership, -1);
-                                    if (membershipManager.memberships.ContainsKey(casefilterInput))
+                                    if (membershipManager.memberships.ContainsKey(casefilterInputMembership))
                                     {
                                         membershipFilter = casefilterInputMembership;
                                         Console.WriteLine("Filter applied!");
@@ -507,6 +655,29 @@ namespace SystemsProgrammingAssignment
             //ARGUMENTS
             if (args.Length>0) 
             {
+                if (args[0]=="-help")
+                {
+                    Console.WriteLine("Here is a this following lines of arguments you can use:\n1) Activate dummy data \"-dummydata\"\n2) Create admin account on dummy data \"-dummydata admin\"");
+                }
+                //dummydata
+                if (args[0]== "-dummydata")
+                {
+                    usedummydata = true;
+                    Console.WriteLine("Dummy data activated!");
+                    if (args.Length > 1)
+                    { 
+                        if (args[1]=="admin")
+                        {
+                            createadmin = true;
+                            Console.WriteLine("Admin account created!\nUsername = admin\nPassword = password123!");
+                            User admin = new User(userService.GenerateID(users), "admin", passwordService.HashPassword("password123!"),2,1);
+                            users.Add(admin);
+                            loggedinUser = admin;
+                        }
+                    }
+                }
+                Console.WriteLine("PRESS ENTER TO CONTINUE");
+                Console.ReadLine();
 
             }
             else
@@ -514,7 +685,7 @@ namespace SystemsProgrammingAssignment
                 Console.WriteLine("No arguments provided, press any key to start");
                 Console.ReadLine();
             }
-            BeginVehicleDataLoading();
+            LoadAllData();
             
             //CORE LOOP
             
@@ -547,7 +718,7 @@ namespace SystemsProgrammingAssignment
                 //logged in
                 else
                 {
-                    Console.WriteLine($"Welcome, {loggedinUser.ReturnUsername()}! You are using Autorenter as a {membershipManager.memberships[loggedinUser.ReturnMembershipLevel()].ReturnName()} member.\n1) Select a vehicle\n2) Log out\n3) Check active booking\n4) Return previous bookings");
+                    Console.WriteLine($"Welcome, {loggedinUser.ReturnUsername()}! You are using Autorenter as a {membershipManager.memberships[loggedinUser.ReturnMembershipLevel()].ReturnName()} member.\n1) Select a vehicle\n2) Log out\n3) Manage active booking\n4) Return previous bookings\n5) Manage membership {(loggedinUser.IsAdmin()?"\n6) Admin Menu":"")}");
                     string input = Console.ReadLine();
                     int caseInput = TryConvertToInt(input, -1);
                     switch (caseInput)
@@ -566,8 +737,27 @@ namespace SystemsProgrammingAssignment
                                 Vehicle v = GetVehicleFromID(activeBooking.ReturnVehicleID());
                                 if (v != null)
                                 {
-                                    Console.WriteLine($"{v.ReturnBasicVehicleInfoInList()}\n{activeBooking.ReturnBookingInfo()}");
+                                    Console.WriteLine($"{v.ReturnBasicVehicleInfoInList()}\n{activeBooking.ReturnBookingInfo()}\n");
+
+                                    if (!activeBooking.IsAwaitingReturnVerification())
+                                    {
+                                        Console.WriteLine("Would you like to log your return of this vehicle? This will have to be checked by a member of staff.\nType \"Yes\" to return it, enter anything else to continue");
+                                        input = Console.ReadLine();
+                                        if (!string.IsNullOrWhiteSpace(input))
+                                        {
+                                            if (input.ToLower() == "yes")
+                                            {
+                                                activeBooking.SetReturnTime(DateTime.Now);
+                                                SaveAll();
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Your return is waiting to be verified by an admin");
+                                    }
                                 }
+                               
                             }
                             else { Console.WriteLine("You have no active booking."); }
                             break;
@@ -581,13 +771,26 @@ namespace SystemsProgrammingAssignment
                                     Vehicle v = GetVehicleFromID(booking.ReturnVehicleID());
                                     if (v!=null)
                                     {
-                                        Console.WriteLine($"{i + 1}) {v.ReturnBasicVehicleInfo()}");
+                                        Console.WriteLine($"{i + 1}) {v.ReturnBasicVehicleInfo()} booked at {booking.ReturnBookingStart()} and returned at {booking.ReturnTimeReturned()}");
                                         //TODO MORE INFO AND CHECK ACTIVE
                                     }
                                 }
                             }
                             else { Console.WriteLine("No previous bookings found"); }
                           
+                            break;
+                        case 5:
+                            ManageMembership();
+                            break;
+                        case 6:
+                            if (loggedinUser.IsAdmin())
+                            {
+                                AdminMenu();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid selection. Please try again.");
+                            }
                             break;
                         default:
                             Console.WriteLine("Invalid selection. Please try again.");
