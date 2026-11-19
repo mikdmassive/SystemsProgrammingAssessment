@@ -1,9 +1,9 @@
 ﻿public class Car : Vehicle
 {
     private int NumberOfSeats;
-    public Car(string VehicleID, string RegPlate, string Make, string Model, int MembershipLevel, float CostPerHour, int MaxLoadWeight) : base(VehicleID, RegPlate, Make, Model, MembershipLevel, CostPerHour)
+    public Car(string VehicleID, string RegPlate, string Make, string Model, int MembershipLevel, float CostPerHour, int NumberOfSeats) : base(VehicleID, RegPlate, Make, Model, MembershipLevel, CostPerHour)
     {
-        this.NumberOfSeats = MaxLoadWeight;
+        this.NumberOfSeats = NumberOfSeats;
     }
     public int ReturnNumberOfSeats()
     {

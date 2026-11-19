@@ -2,7 +2,7 @@
   "profiles": {
     "SystemsProgrammingAssignment": {
       "commandName": "Project",
-      "commandLineArgs": "-dummydata admin\r\n"
+      "commandLineArgs": "-createadmin\r\n"
     }
   }
 }

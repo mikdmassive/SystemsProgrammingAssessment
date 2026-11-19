@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,8 +14,9 @@ namespace SystemsProgrammingAssignment
         static List<Vehicle> vehicles = new List<Vehicle>() { };
         static List<User> users = new List<User>() { };
         static List<Booking> bookings = new List<Booking>() { };
-        static bool usedummydata = true;//change false later
+        static bool usedummydata = false;//change false later
         static bool createadmin = false;
+        static bool createadminaccount = false;
 
 
 
@@ -34,11 +36,239 @@ namespace SystemsProgrammingAssignment
         }
         public static User GetUserFromID(string id) { return users.FirstOrDefault(u => u.ReturnUserID() == id); }
         
+        //saving and loading
+        //VEHICLES
+        static string vehicleFilePath = "Data/vehicles.dat";
+        public static void SaveVehicles()
+        {
+            Directory.CreateDirectory("Data");
+            if (!usedummydata)
+            {
+                //save vehicles to file
+                FileStream fileStream = new FileStream(vehicleFilePath, FileMode.Create);
+                BinaryWriter writer = new BinaryWriter(fileStream);
+                writer.Write(vehicles.Count);
+                foreach (Vehicle vehicle in vehicles)
+                {
+                    if (vehicle is Car)
+                    {
+                        writer.Write("Car");
+                    }
+                    else if (vehicle is HGV)
+                    {
+                        writer.Write("HGV");
+                    }
+                    else if (vehicle is Motorcycle)
+                    {
+                        writer.Write("Motorcycle");
+                    }
+                    else
+                    {
+                        throw new InvalidDataException("Unknown vehicle type");
+                    }
+                    writer.Write(vehicle.ReturnVehicleID());
+                    writer.Write(vehicle.ReturnRegPlate());
+                    writer.Write(vehicle.ReturnMake());
+                    writer.Write(vehicle.ReturnModel());
+                    writer.Write(vehicle.ReturnMembershipLevel());
+                    writer.Write(vehicle.ReturnCostPerHour());
+                    //checktype
+                    if (vehicle is Car car)
+                    {
+                        writer.Write(car.ReturnNumberOfSeats());
+                    }
+                    else if (vehicle is HGV hgv)
+                    {
+                        writer.Write(hgv.ReturnMaxLoadWeight());
+                    }
+                    else if (vehicle is Motorcycle motorcycle)
+                    {
+                        writer.Write(motorcycle.ReturnEngineCapacity());
+                    }
+                }
+                fileStream.Close();
+                writer.Close();
+
+            }
+        }
+        public static void LoadVehicles()
+        {
+            if (File.Exists(vehicleFilePath))
+            {
+                FileStream fileStream = new FileStream(vehicleFilePath, FileMode.Open);
+                BinaryReader reader = new BinaryReader(fileStream);
+                if (fileStream.Length == 0) { fileStream.Close();reader.Close(); return; }
+                int vehicleCount = reader.ReadInt32();
+                for (int i = 0; i < vehicleCount; i++)
+                {
+                    string type = reader.ReadString();
+                    string vehicleID = reader.ReadString();
+                    string regPlate = reader.ReadString();
+                    string make = reader.ReadString();
+                    string model = reader.ReadString();
+                    int membershipLevel = reader.ReadInt32();
+                    float costPerHour = reader.ReadSingle();
+                    Vehicle vehicle = null;
+                    if (type == "Car")
+                    {
+                        int numberOfSeats = reader.ReadInt32();
+                        vehicle = new Car(vehicleID, regPlate, make, model, membershipLevel, costPerHour, numberOfSeats);
+                        vehicles.Add(vehicle);
+                    }
+                    else if (type == "HGV")
+                    {
+                        float maxLoadWeight = reader.ReadSingle();
+                        vehicle = new HGV(vehicleID, regPlate, make, model, membershipLevel, costPerHour, maxLoadWeight);
+                        vehicles.Add(vehicle);
+
+                    }
+                    else if (type == "Motorcycle")
+                    {
+                        int engineCapacity = reader.ReadInt32();
+                        vehicle = new Motorcycle(vehicleID, regPlate, make, model, membershipLevel, costPerHour, engineCapacity);
+                        vehicles.Add(vehicle);
+
+                    }
+                    else
+                    {
+                        throw new InvalidDataException("Unknown vehicle type");
+                    }
+                }
+                fileStream.Close();
+                reader.Close();
+            }
+            else { Console.WriteLine("Vehicle save file not found.");  Console.ReadLine(); }
+        }
+        //BOOKINGS
+        static string bookingFilePath = "Data/booking.dat";
+
+        public static void SaveBookings()
+        {
+            Directory.CreateDirectory("Data");
+            if (!usedummydata)
+            {
+                //save vehicles to file
+                FileStream fileStream = new FileStream(bookingFilePath, FileMode.Create);
+                BinaryWriter writer = new BinaryWriter(fileStream);
+                writer.Write(bookings.Count);
+                foreach (Booking booking in bookings)
+                {
+                    writer.Write(booking.ReturnBookingID());
+                    writer.Write(booking.ReturnVehicleID());
+                    writer.Write(booking.ReturnUserID());
+                    writer.Write(booking.ReturnBookingStart().ToBinary());
+                    writer.Write(booking.ReturnBookingEnd().ToBinary());
+                    DateTime? returnTime = booking.ReturnTimeReturned();
+                    writer.Write(returnTime.HasValue);
+                    if (returnTime.HasValue)
+                    {
+                        writer.Write(returnTime.Value.ToBinary());
+                    }
+                    writer.Write(booking.IsReturned());
+
+                }
+                fileStream.Close();
+                writer.Close();
+            }
+        }
+        public static void LoadBookings()
+        {
+            if (File.Exists(bookingFilePath))
+            {
+                FileStream fileStream = new FileStream(bookingFilePath, FileMode.Open);
+                BinaryReader reader = new BinaryReader(fileStream);
+                if (fileStream.Length == 0) { fileStream.Close(); reader.Close(); return; }
+
+
+                int bookingCount = reader.ReadInt32();
+                for (int i = 0; i < bookingCount; i++)
+                {
+                    string bookingID = reader.ReadString();
+                    string vehicleID = reader.ReadString();
+                    string userID = reader.ReadString();
+
+                    DateTime startTime = DateTime.FromBinary(reader.ReadInt64());
+                    DateTime endTime = DateTime.FromBinary(reader.ReadInt64());
+
+                    DateTime? timeReturned = null;
+
+                    if (reader.ReadBoolean())
+                    {
+                        timeReturned = DateTime.FromBinary(reader.ReadInt64());
+                    }
+                    bool returnVerified = reader.ReadBoolean();
+                    Booking booking = new Booking(bookingID, vehicleID, userID, startTime, endTime);
+                    booking.SetReturnTime(timeReturned);
+                    if (returnVerified)
+                    {
+                        booking.VerifyReturn();
+                    }
+                    bookings.Add(booking);
+
+                }
+                fileStream.Close();
+                reader.Close();
+            }
+            else { Console.WriteLine("Booking save file not found."); Console.ReadLine(); }
+
+        }
+        static string usersFilePath = "Data/users.dat";
+        public static void SaveUsers()
+        {
+            Directory.CreateDirectory("Data");
+            if (!usedummydata)
+            {
+                //save vehicles to file
+                FileStream fileStream = new FileStream(usersFilePath, FileMode.Create);
+                BinaryWriter writer = new BinaryWriter(fileStream);
+                writer.Write(users.Count);
+                foreach (User user in users)
+                {
+                    writer.Write(user.ReturnUserID());
+                    writer.Write(user.ReturnUsername());
+                    writer.Write(user.ReturnPasswordHash());
+                    writer.Write(user.ReturnAccessLevel());
+                    writer.Write(user.ReturnMembershipLevel());
+
+                }
+                fileStream.Close();
+                writer.Close();
+            }
+        }
+        public static void LoadUsers()
+        {
+            if (File.Exists(usersFilePath))
+            {
+                FileStream fileStream = new FileStream(usersFilePath, FileMode.Open);
+                BinaryReader reader = new BinaryReader(fileStream);
+                if (fileStream.Length == 0) { fileStream.Close(); reader.Close(); return; }
+
+
+                int usersCount = reader.ReadInt32();
+                for (int i = 0; i < usersCount; i++)
+                {
+                    string userID = reader.ReadString();
+                    string username = reader.ReadString();
+                    string passwordHash = reader.ReadString();
+                    int accessLevel = reader.ReadInt32();
+                    int membershipLevel = reader.ReadInt32();
+                    User user = new User(userID, username, passwordHash, accessLevel, membershipLevel);
+                    users.Add(user);
+                }
+                fileStream.Close();
+                reader.Close();
+            }
+            else { Console.WriteLine("Users save file not found."); Console.ReadLine(); }
+
+        }
+        //USERS
         public static void LoadAllData()
         {
             if (!usedummydata)//REAL DATA
             {
-
+                LoadVehicles();
+                LoadBookings();
+                LoadUsers();
             }
             else//dummy data
             {
@@ -51,7 +281,9 @@ namespace SystemsProgrammingAssignment
         {
             if (!usedummydata)
             {
-
+                SaveVehicles();
+                SaveBookings();
+                SaveUsers();
             }
         }
         //catch verfications
@@ -96,6 +328,7 @@ namespace SystemsProgrammingAssignment
             UserService userService = new UserService();
             MembershipManager membershipManager = new MembershipManager();
             BookingManager bookingManager = new BookingManager();
+            VehicleManager vehicleManager = new VehicleManager();
             //CLASS MANAGEMENT
             Vehicle SelectVehicleFromGivenList(List<Vehicle> VehicleList)
             {
@@ -224,7 +457,20 @@ namespace SystemsProgrammingAssignment
                             break;
                         case 2:
                             //vehicle management
-
+                            Console.WriteLine("What would you like to do?\n1) Create vehicle");
+                            input = Console.ReadLine();
+                            caseInput = TryConvertToInt(input, -1);
+                            switch (caseInput)
+                            {
+                                case 1:
+                                    vehicles.Add(vehicleManager.CreateVehicle(vehicles));
+                                    SaveAll();
+                                    break;
+                             
+                                default:
+                                    Console.WriteLine("Invalid selection.");
+                                    break;
+                            }
                             break;
                         case 3:
 
@@ -326,7 +572,7 @@ namespace SystemsProgrammingAssignment
                 }
                 else {Console.WriteLine("Error - User not found"); }
             }
-            void AccountCreation()
+            void AccountCreation(int accesslevel)
             {
                 Console.Clear();
                 TitleCard();
@@ -354,7 +600,7 @@ namespace SystemsProgrammingAssignment
                         break;
                     }
                 }
-                User createdUser = new User(userService.GenerateID(users), username, password, 0, 1);
+                User createdUser = new User(userService.GenerateID(users), username, password, accesslevel, 1);
                 users.Add(createdUser);
                 loggedinUser = createdUser;
                 Console.WriteLine("Account Created Successfully!");
@@ -418,6 +664,7 @@ namespace SystemsProgrammingAssignment
                     else { Console.WriteLine("Invalid,Try Again"); }
                 }
             }
+            
             void VehicleSelection()
             {
                 bool looping = true;
@@ -657,7 +904,7 @@ namespace SystemsProgrammingAssignment
             {
                 if (args[0]=="-help")
                 {
-                    Console.WriteLine("Here is a this following lines of arguments you can use:\n1) Activate dummy data \"-dummydata\"\n2) Create admin account on dummy data \"-dummydata admin\"");
+                    Console.WriteLine("Here is a this following lines of arguments you can use:\n1) Activate dummy data \"-dummydata\"\n2) Create admin account on dummy data \"-dummydata admin\"\n3) Create admin account on main data \"-createadmin\"");
                 }
                 //dummydata
                 if (args[0]== "-dummydata")
@@ -676,6 +923,22 @@ namespace SystemsProgrammingAssignment
                         }
                     }
                 }
+                else if (args[0] == "-createadmin")
+                {
+                    Debug.WriteLine(passwordService.HashPassword("ILuvAutoRenter123!"));//adminpassword is ILuvAutoRenter123!
+                    string adminpasswordhash = "60000.dxBj2JLbIJQuAT8BBWoS0g==.YN0Nbk1uITAKRUczE0L4allZgSTFzLcqPJ1jAem4SOM=";
+                    Console.WriteLine("Enter the admin verification password");
+                    string input = Console.ReadLine();
+                    if (passwordService.VerifyHashedPassword(input, adminpasswordhash))
+                    {
+                        Console.WriteLine("Admin account creation will be prompted upon startup!");
+                        createadminaccount = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Incorrect password, admin account not activated.");
+                    }
+                }
                 Console.WriteLine("PRESS ENTER TO CONTINUE");
                 Console.ReadLine();
 
@@ -686,9 +949,12 @@ namespace SystemsProgrammingAssignment
                 Console.ReadLine();
             }
             LoadAllData();
-            
+            if (createadminaccount)
+            {
+                AccountCreation(2);
+            }
             //CORE LOOP
-            
+
             //TODO login
             while (true)
             {
@@ -704,7 +970,7 @@ namespace SystemsProgrammingAssignment
                     switch (caseInput)
                     {
                         case 1:
-                            AccountCreation();
+                            AccountCreation(0);
                             break;
                         case 2:
                             LogIn();
