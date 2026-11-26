@@ -266,9 +266,7 @@ namespace SystemsProgrammingAssignment
         {
             if (!usedummydata)//REAL DATA
             {
-                LoadVehicles();
-                LoadBookings();
-                LoadUsers();
+                Parallel.Invoke(LoadVehicles,LoadUsers,LoadBookings);
             }
             else//dummy data
             {
@@ -281,9 +279,7 @@ namespace SystemsProgrammingAssignment
         {
             if (!usedummydata)
             {
-                SaveVehicles();
-                SaveBookings();
-                SaveUsers();
+                Parallel.Invoke(SaveVehicles, SaveUsers, SaveBookings);   
             }
         }
         //catch verfications
@@ -392,6 +388,61 @@ namespace SystemsProgrammingAssignment
                 return vehicleDictionary;
             }
             //INTERNAL FUNCTIONS 
+            void UserManagement()
+            {
+                Console.WriteLine("Enter a username to manage:");
+                string username = Console.ReadLine();
+                if (userService.GetUserIDFromUsername(users, username) != null)
+                {
+                    User u = GetUserFromID(userService.GetUserIDFromUsername(users, username));
+                    if (u!=null)
+                    {
+                        Console.WriteLine($"\nUser found: {u.ReturnUsername()} - Access Level: {u.ReturnAccessLevel()} - Membership Level: {membershipManager.ReturnMembership(u.ReturnMembershipLevel()).ReturnName()}\n\n What would you like to do? 1) Change Access Level\n2) Fine User\n3) Exit");
+                        
+                    }
+                    else { Console.WriteLine("Error - User not found."); }
+                }
+                else { Console.WriteLine("User not found."); }
+                Console.WriteLine("PRESS ENTER TO CONTINUE");
+                Console.ReadLine();
+            }
+            void ShowAllBookings()
+            {
+                //active bookings
+                List<Booking> activeBookings = bookings.Where(b => b.IsBookingActive()).ToList();
+                Console.WriteLine("ACTIVE BOOKINGS:");
+                if (activeBookings.Count > 0)
+                {
+                    foreach (Booking booking in activeBookings)
+                    {
+                        Vehicle v = GetVehicleFromID(booking.ReturnVehicleID());
+                        User u = GetUserFromID(booking.ReturnUserID());
+                        if (v != null && u != null)
+                        {
+                            Console.WriteLine($"{v.ReturnBasicVehicleInfo()} booked by {u.ReturnUsername()} from {booking.ReturnBookingStart()} to {booking.ReturnBookingEnd()} ({(booking.IsOverdue() ? "OVERDUE" : "STILL ACTIVE")})");
+                        }
+                    }
+                }
+                else { Console.WriteLine("No active bookings."); }
+                //previous bookings
+                List<Booking> prevBookings = bookings.Where(b => !b.IsBookingActive()).ToList();
+                Console.WriteLine("\nPREVIOUS BOOKINGS:");
+                if (prevBookings.Count > 0)
+                {
+                    foreach (Booking booking in prevBookings)
+                    {
+                        Vehicle v = GetVehicleFromID(booking.ReturnVehicleID());
+                        User u = GetUserFromID(booking.ReturnUserID());
+                        if (v != null && u != null)
+                        {
+                            Console.WriteLine($"{v.ReturnBasicVehicleInfo()} booked by {u.ReturnUsername()} from {booking.ReturnBookingStart()} to {booking.ReturnBookingEnd()}");
+                        }
+                    }
+                }
+                else { Console.WriteLine("No previous bookings."); }
+                Console.WriteLine("\nPRESS ENTER TO CONTINUE");
+                Console.ReadLine();
+            }
             void AdminMenu()
             {
                 bool looping = true;
@@ -399,7 +450,7 @@ namespace SystemsProgrammingAssignment
                 {
                     Console.Clear();
                     TitleCard();
-                    Console.WriteLine("          --  ADMIN SCREEN  --        \n1) Confirm Vehicle Return\n2) Vehicle Manager\n3) User Manager\n4) Exit");
+                    Console.WriteLine("          --  ADMIN SCREEN  --        \n1) Confirm Vehicle Return\n2) Vehicle Manager\n3) User Manager\n4) Show all bookings\n5) Exit");
                     string input = Console.ReadLine();
                     int caseInput = TryConvertToInt(input, -1);
                     switch (caseInput)
@@ -474,8 +525,13 @@ namespace SystemsProgrammingAssignment
                             break;
                         case 3:
 
+                            UserManagement();
                             break;
                         case 4:
+                            ShowAllBookings();
+
+                            break;
+                        case 5:
                             looping = false;
                             break;
                         default:
